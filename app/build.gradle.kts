@@ -1,4 +1,3 @@
-lateinit var freeCompilerArgs: Any
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRIMARY CONVENTION PLUGIN - All-in-one Application Configuration

@@ -8,15 +8,15 @@ plugins {
 
 android {
     namespace = "dev.aurakai.auraframefx.genesis.oracledrive.datavein"
-    compileSdk = libs.versions.compile.sdk.get().toInt()
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
+        minSdk = 34
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
         isCoreLibraryDesugaringEnabled = true
     }
 

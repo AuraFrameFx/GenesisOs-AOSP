@@ -56,7 +56,7 @@ allprojects {
         ===================================================================
         🧬 GENESIS PROTOCOL - JAVA TOOLCHAIN STATUS
         ===================================================================
-        - Current JVM: $jvm (${System.getProperty("java.vm.version")})
+        - Current JVM: $jvm (24)
         - Java Version: $jreVersion
         - Java Home: $jreHome
         - Active Java Toolchain: ${JavaVersion.current()}
