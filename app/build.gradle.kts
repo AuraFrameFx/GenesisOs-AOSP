@@ -94,8 +94,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_24
-        targetCompatibility = JavaVersion.VERSION_24
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
         isCoreLibraryDesugaringEnabled = true
     }
 
@@ -192,7 +192,7 @@ dependencies {
     implementation(libs.androidx.datastore.core)
 
     // Google Play Billing - Subscription Management
-    implementation("com.android.billingclient:billing-ktx:8.2.1")
+    implementation(libs.billing.ktx)
 
     // Security
     implementation(libs.androidx.security.crypto)
