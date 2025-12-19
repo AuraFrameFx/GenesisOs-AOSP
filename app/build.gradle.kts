@@ -170,6 +170,9 @@ dependencies {
     implementation(libs.moshi.kotlin)
     ksp(libs.moshi.kotlin.codegen)
 
+    // Gson (JSON processing)
+    implementation(libs.gson)
+
     // Kotlin DateTime & Coroutines
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.coroutines.core)
@@ -194,9 +197,23 @@ dependencies {
     compileOnly(files("$projectDir/libs/api-82-sources.jar"))
 
     // AI & ML - Google Generative AI SDK
+    implementation(libs.generativeai)
 
     // Core Library Desugaring (Java 24 APIs)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Firebase Ecosystem
+    // ═══════════════════════════════════════════════════════════════════════════
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.config)
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Internal Project Modules - Core

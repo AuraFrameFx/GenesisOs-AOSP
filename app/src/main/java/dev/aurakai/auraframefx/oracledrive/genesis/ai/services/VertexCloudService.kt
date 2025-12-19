@@ -4,8 +4,9 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import dev.aurakai.auraframefx.oracledrive.genesis.ai.clients.VertexAIClient
-import dev.aurakai.auraframefx.data.logging.AuraFxLogger
+import dev.aurakai.auraframefx.utils.AuraFxLogger
 import dev.aurakai.auraframefx.security.SecurityContext
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -14,6 +15,7 @@ import javax.inject.Inject
  * Vertex Cloud Service - Advanced AI cloud integration for Genesis Protocol
  * Provides seamless connectivity with Google Vertex AI and cloud-based AI services
  */
+@AndroidEntryPoint
 class VertexCloudService : Service() {
 
     @Inject

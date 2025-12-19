@@ -13,7 +13,7 @@ import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.models.agent_states.ActiveThreat
 import dev.aurakai.auraframefx.models.agent_states.ProcessingState
 import dev.aurakai.auraframefx.models.agent_states.VisionState
-import dev.aurakai.auraframefx.oracledrive.genesis.ai.context.ContextManager
+import dev.aurakai.auraframefx.ai.context.ContextManager
 import dev.aurakai.auraframefx.utils.AuraFxLogger
 import dev.aurakai.auraframefx.utils.toKotlinJsonObject
 import kotlinx.coroutines.CoroutineScope

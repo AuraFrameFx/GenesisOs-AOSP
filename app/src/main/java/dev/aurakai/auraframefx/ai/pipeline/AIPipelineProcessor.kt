@@ -1,9 +1,9 @@
 package dev.aurakai.auraframefx.ai.pipeline
 
 import dev.aurakai.auraframefx.ai.agents.GenesisAgent
-import dev.aurakai.auraframefx.ai.services.AuraAIService
-import dev.aurakai.auraframefx.cascade.CascadeAIService
-import dev.aurakai.auraframefx.kai.KaiAIService
+import dev.aurakai.auraframefx.oracledrive.genesis.ai.services.AuraAIService
+import dev.aurakai.auraframefx.services.CascadeAIService
+import dev.aurakai.auraframefx.oracledrive.genesis.ai.services.KaiAIService
 import dev.aurakai.auraframefx.models.AgentMessage
 import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.models.AgentType
@@ -11,6 +11,7 @@ import dev.aurakai.auraframefx.models.AiRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -303,8 +304,6 @@ class AIPipelineProcessor @Inject constructor(
         }
     }
 }
-
-class GenesisAgent
 
 sealed class PipelineState {
     object Idle : PipelineState()

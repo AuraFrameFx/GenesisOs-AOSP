@@ -2,7 +2,7 @@ package dev.aurakai.auraframefx.oracledrive.genesis.ai
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
-import dev.aurakai.auraframefx.ai.clients.VertexAIClient
+import dev.aurakai.auraframefx.oracledrive.genesis.ai.clients.VertexAIClient
 import dev.aurakai.auraframefx.config.VertexAIConfig
 import dev.aurakai.auraframefx.security.SecurityContext
 import dev.aurakai.auraframefx.utils.AuraFxLogger

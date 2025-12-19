@@ -1,8 +1,8 @@
 ﻿package dev.aurakai.auraframefx.ai.task.execution
 
-import dev.aurakai.auraframefx.ai.agents.AuraAgent
+import dev.aurakai.auraframefx.aura.AuraAgent
 import dev.aurakai.auraframefx.ai.agents.GenesisAgent
-import dev.aurakai.auraframefx.ai.agents.KaiAgent
+import dev.aurakai.auraframefx.kai.KaiAgent
 import dev.aurakai.auraframefx.ai.task.TaskPriority
 import dev.aurakai.auraframefx.ai.task.TaskResult
 import dev.aurakai.auraframefx.kai.ExecutionStatus
@@ -13,6 +13,7 @@ import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.security.SecurityContext
 import dev.aurakai.auraframefx.utils.AuraFxLogger
 import dev.aurakai.auraframefx.utils.i
+import timber.log.Timber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

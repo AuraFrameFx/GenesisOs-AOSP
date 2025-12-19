@@ -2,7 +2,7 @@
 
 import android.content.Context
 import dev.aurakai.auraframefx.ai.context.ContextManager
-import dev.aurakai.auraframefx.data.logging.AuraFxLogger
+import dev.aurakai.auraframefx.utils.AuraFxLogger
 import dev.aurakai.auraframefx.models.AgentResponse
 import dev.aurakai.auraframefx.models.AiRequest
 import dev.aurakai.auraframefx.oracledrive.genesis.ai.clients.VertexAIClient
