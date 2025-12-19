@@ -46,6 +46,7 @@ object GenesisJvmConfig {
                 compilerOptions {
                     freeCompilerArgs.addAll(
                         "-Xcontext-parameters",
+                        "-Xannotation-default-target=param-property",
                         "-opt-in=kotlin.RequiresOptIn",
                         "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                         "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
