@@ -46,8 +46,8 @@ class GenesisLibraryPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
             // Apply plugins in correct order
+            // Note: Kotlin is built into AGP 9.0.0-alpha14+
             pluginManager.apply("com.android.library")
-            pluginManager.apply("org.jetbrains.kotlin.android")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
             pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
 

@@ -2,6 +2,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.configure
 
 /**
@@ -18,20 +19,16 @@ import org.gradle.kotlin.dsl.configure
  * - KSP annotation processing
  * - Jetpack Compose (built-in compiler with Kotlin 2.0+)
  * - Google Services (Firebase)
- * - Java 25 bytecode target (Firebase + AGP 9.0 compatible)
+ * - Java 24 bytecode target (Firebase + AGP 9.0 compatible)
  * - Consistent build configuration across app modules
  *
- * Plugin Application Order:
- * 1. org.jetbrains.kotlin.android (Required for Hilt even with built-in Kotlin)
- * 2. com.android.application
- * 3. org.jetbrains.kotlin.plugin.compose
- * 4. com.google.dagger.hilt.android
- * 5. com.google.devtools.ksp
- * 6. org.jetbrains.kotlin.plugin.serialization
- * 7. com.google.gms.google-services
- *
- * Note: AGP 9.0+ has built-in Kotlin, but Hilt requires explicit plugin application.
- * This hybrid approach provides maximum compatibility.
+ * Plugin Application Order (Critical!):
+ * 1. com.android.application (provides built-in Kotlin since AGP 9.0)
+ * 2. org.jetbrains.kotlin.plugin.compose (Built-in Compose compiler)
+ * 3. com.google.dagger.hilt.android
+ * 4. com.google.devtools.ksp
+ * 5. org.jetbrains.kotlin.plugin.serialization
+ * 6. com.google.gms.google-services
  *
  * @since Genesis Protocol 2.0 (AGP 9.0.0-alpha14 Compatible)
  */
@@ -48,18 +45,13 @@ class GenesisApplicationPlugin : Plugin<Project> {
      */
     override fun apply(project: Project) {
         with(project) {
-            // Apply core plugins. Android must be first.
+            // Apply plugins in correct order
+            // Note: Kotlin is built into AGP 9.0.0-alpha14+ (android.builtInKotlin=true)
             pluginManager.apply("com.android.application")
-
-            // TEMPORARILY DISABLE HILT - BaseExtension not found issue persists
-            // TODO: Fix Hilt compatibility with AGP 9.0
-
-            // Apply Kotlin plugins (built-in Kotlin handles org.jetbrains.kotlin.android automatically)
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
-            pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
             pluginManager.apply("com.google.dagger.hilt.android")
-            // Apply dependent plugins synchronously to fix BaseExtension ordering
             pluginManager.apply("com.google.devtools.ksp")
+            pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
             pluginManager.apply("com.google.gms.google-services")
 
             extensions.configure<ApplicationExtension> {
@@ -136,7 +128,6 @@ class GenesisApplicationPlugin : Plugin<Project> {
                     }
                 }
             }
-
 
             // Configure Kotlin JVM toolchain and compilation options
             GenesisJvmConfig.configureKotlinJvm(project)

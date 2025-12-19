@@ -41,14 +41,14 @@ class GenesisLibraryHiltPlugin : Plugin<Project> {
      */
     override fun apply(project: Project) {
         with(project) {
-            // Apply core plugins. Android must be first.
+            // Apply plugins in correct order
+            // Note: Kotlin is built into AGP 9.0.0-alpha14+
             pluginManager.apply("com.android.library")
-            pluginManager.apply("org.jetbrains.kotlin.android")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
             pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
 
-            // Apply dependent plugins only after the Android plugin has been configured.
-            plugins.withId("com.android.library") {
+            // CRITICAL: Apply Hilt AFTER Android plugin is fully configured
+            pluginManager.withPlugin("com.android.library") {
                 pluginManager.apply("com.google.dagger.hilt.android")
                 pluginManager.apply("com.google.devtools.ksp")
             }

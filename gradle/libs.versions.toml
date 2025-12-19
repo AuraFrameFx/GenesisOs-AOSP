@@ -2,7 +2,7 @@
 # ============================================================================
 # Core Build Tools (AGP 9.0.0-beta02 + Kotlin 2.3.0-RC2)
 # ============================================================================
-agp = "9.0.0-beta05"
+agp = "9.0.0-rc01"
 billingKtx = "8.2.0"
 coilSvg = "2.7.0"
 coilVersion = "2.7.0"
@@ -13,7 +13,7 @@ gradleCore = "9.4.0-milestone-2"
 generativeai = "0.9.0"
 foojayResolver = "1.0.0"
 googleServices = "4.4.4"
-firebaseCrashlyticsPlugin = "23.00"
+firebaseCrashlyticsPlugin = "3.0.6"
 hilt = "2.57.2"
 hilt-android = "2.57.2"
 hiltAndroidTestingVersion = "2.57.2"
@@ -21,9 +21,9 @@ hiltWork = "1.3.0"
 junitJupiterApi = "6.0.1"
 junitJupiterApiVersion = "6.0.1"
 junitVintageEngine = "6.0.1"
-kotlin = "2.3.0-RC2"
+kotlin = "2.3.0-Beta2"
 kotlinDsl = "5.1.2"
-ksp = "2.3.3"
+ksp = "2.3.2"
 material3WindowSizeClass = "1.4.0"
 materialIconsExtended = "1.7.8"
 robolectricVersion = "4.16"
@@ -98,7 +98,7 @@ material3 = "1.4.0"
 foundationLayout = "1.10.0"
 foundation = "1.10.0"
 animation = "1.10.0"
-kotlinVersion = "2.3.0-RC2"
+kotlinVersion = "2.3.0-Beta2"
 
 [libraries]
 # ============================================================================

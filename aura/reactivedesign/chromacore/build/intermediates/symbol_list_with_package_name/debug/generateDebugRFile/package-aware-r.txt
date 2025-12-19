@@ -1,0 +1,3 @@
+dev.aurakai.auraframefx.aura.reactivedesign.chromacore
+string colorblendr_debug_name
+string colorblendr_main_name

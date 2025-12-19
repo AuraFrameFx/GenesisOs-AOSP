@@ -1,77 +1,51 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// PRIMARY CONVENTION PLUGIN - All-in-one Application Configuration
+// ═══════════════════════════════════════════════════════════════════════════
+// Plugins are now versioned in the root build.gradle.kts
+// All plugin versions are managed centrally in the root project
 plugins {
-    id("genesis.android.application")
+    // Core Android and Kotlin plugins
+    id("com.android.application")
+
+    // Compose and serialization
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
+
+    // Dependency injection and code generation
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 
+    // Firebase and analytics
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
     namespace = "dev.aurakai.auraframefx"
-    compileSdk = 36
+    ndkVersion = libs.versions.ndk.get()
+    compileSdk = libs.versions.compile.sdk.get().toInt()
 
     defaultConfig {
         applicationId = "dev.aurakai.auraframefx"
-        minSdk = 34
-        targetSdk = 36
+        minSdk = libs.versions.min.sdk.get().toInt()
+        targetSdk = libs.versions.target.sdk.get().toInt()
         versionCode = 1
         versionName = "0.1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
+        // Genesis Protocol: Gemini 2.0 Flash API Key
+        // Add to local.properties: GEMINI_API_KEY=your_key_here
+        // Get key from: https://aistudio.google.com/app/apikey
         val geminiApiKey = project.findProperty("GEMINI_API_KEY")?.toString() ?: ""
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
-        buildConfigField("String", "API_BASE_URL", "\"https://api.aurakai.dev/v1/\"")
 
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-
-        if (project.file("src/main/cpp/CMakeLists.txt").exists()) {
-            ndk {
-                abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))
-            }
-        }
-    }
-
-    if (project.file("src/main/cpp/CMakeLists.txt").exists()) {
         externalNativeBuild {
             cmake {
-                path = file("src/main/cpp/CMakeLists.txt")
-                version = "3.22.1"
+                cppFlags += "-std=c++20"
+                arguments += listOf(
+                    "-DANDROID_STL=c++_shared",
+                    "-DANDROID_PLATFORM=android-${libs.versions.min.sdk.get()}"
+                )
             }
-        }
-    }
-
-    buildTypes {
-        debug {
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            buildConfigField("Boolean", "ENABLE_PAYWALL", "false")
-        }
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            buildConfigField("Boolean", "ENABLE_PAYWALL", "true")
-        }
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "/META-INF/DEPENDENCIES"
-            excludes += "/META-INF/LICENSE.txt"
-            excludes += "/META-INF/NOTICE.txt"
-            excludes += "**/kotlin/**"
-            excludes += "**/*.txt"
-        }
-        jniLibs {
-            useLegacyPackaging = false
-            pickFirsts += listOf("**/libc++_shared.so", "**/libjsc.so")
         }
     }
 
@@ -90,22 +64,12 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
-        viewBinding = true
-        aidl = true
     }
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // DEDUPLICATION: Exclude duplicate files to fix compile collisions
-    // ═══════════════════════════════════════════════════════════════════════════
-    sourceSets {
-        getByName("main") {
-            java.directories.add("dev/aurakai/auraframefx/ai/agents/BaseAgent.kt")
-        }
-        getByName("release") {
-            java.directories.add("dev/aurakai/auraframefx/logging/TimberInitializer.kt")
-        }
-        getByName("debug") {
-            java.directories.add("dev/aurakai/auraframefx/logging/TimberInitializer.kt")
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = libs.versions.cmake.get()
         }
     }
 }
@@ -128,26 +92,20 @@ dependencies {
     // ⚠️ ONLY declare module-specific dependencies below!
     // ═══════════════════════════════════════════════════════════════════════════
 
+    // Hilt Dependency Injection (MUST be added before afterEvaluate)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.retrofit.core)
-    implementation(libs.retrofit.converter.moshi)
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    implementation(libs.androidx.compose.foundation.layout)
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.animation)
-    ksp(libs.moshi.kotlin.codegen)
-
-    implementation(libs.timber)
-    implementation(libs.generativeai)
-
+    // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material)
     implementation(libs.androidx.activity.compose)
 
+    // MultiDex support for 64K+ methods
+    implementation("androidx.multidex:multidex:2.0.1")
+
+    // Compose BOM & UI
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
@@ -157,103 +115,130 @@ dependencies {
     implementation(libs.compose.material.icons.extended)
     debugImplementation(libs.compose.ui.tooling)
 
+    // Compose Extras (Navigation, Animation)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.work)
 
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.core)
 
-    implementation(libs.billing.ktx)
+    // Google Play Billing - Subscription Management
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
+
+    // Security
     implementation(libs.androidx.security.crypto)
 
-    implementation(platform(libs.coil.bom))
-    implementation(libs.coil.compose)
-    implementation(libs.coil.svg)
-    implementation(libs.coil.gif)
-    implementation(libs.coil.video)
-    implementation(libs.coil.network.okhttp)
+    // Root/System Utils
+    implementation(libs.libsu.core)
+    implementation(libs.libsu.io)
+    implementation(libs.libsu.service)
 
-    implementation(libs.yukihook.api)
-    ksp(libs.yukihook.ksp)
+    // YukiHook API
+    compileOnly(libs.yukihookapi.api)
+    ksp(libs.yukihookapi.ksp)
 
+    // Firebase BOM (Bill of Materials) for version management
     implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
 
+
+    // Networking
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.kotlinx.serialization)
-    implementation(libs.retrofit.converter.scalars)
+    implementation(libs.retrofit.converter.moshi)
 
-    implementation(libs.kotlinx.serialization.json) {
-        version {
-            strictly(libs.versions.kotlinxSerializationJson.get())
-        }
-    }
-    implementation(libs.kotlinx.serialization.protobuf)
-    implementation(libs.kotlinx.serialization.cbor)
-    implementation(libs.kotlinx.serialization.properties)
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.gson)
-    implementation(libs.retrofit.converter.gson)
+    // Moshi (JSON - for Retrofit)
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.kotlin.codegen)
 
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.client.logging)
-
+    // Kotlin DateTime & Coroutines
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
+    // Image Loading
+    implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
+    implementation(libs.coil.network.okhttp)
+
+    // Animations
     implementation(libs.lottie.compose)
+
+    // Logging
+    implementation(libs.timber)
+
+    // Memory Leak Detection
     debugImplementation(libs.leakcanary.android)
 
+    // Android API JARs (Xposed)
     compileOnly(files("$projectDir/libs/api-82.jar"))
     compileOnly(files("$projectDir/libs/api-82-sources.jar"))
 
+    // AI & ML - Google Generative AI SDK
+
+    // Core Library Desugaring (Java 24 APIs)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Internal Project Modules - Core
     // ═══════════════════════════════════════════════════════════════════════════
-    implementation(project(":list"))
-    implementation(project(":utilities"))
-    implementation(project(":genesis"))
 
-    // Commented out missing modules - uncomment when modules are ready
-    // implementation(project(":kai:sentinelsfortress:security"))
-    // implementation(project(":aura:reactivedesign:auraslab"))
-    // implementation(project(":cascade:datastream:routing"))
-    // implementation(project(":agents:growthmetrics:nexusmemory"))
+    // Material Icons Extended
+    implementation(libs.compose.material.icons.extended)
 
-    testImplementation(libs.bundles.testing)
-    testRuntimeOnly(libs.junit.jupiter.engine)
+    // Aura → ReactiveDesign (Creative UI & Collaboration)
+    implementation(project(":aura:reactivedesign:auraslab"))
+    implementation(project(":aura:reactivedesign:collabcanvas"))
+    implementation(project(":aura:reactivedesign:chromacore"))
+    implementation(project(":aura:reactivedesign:customization"))
 
-    kspTest(libs.hilt.android.compiler)
-    testImplementation(libs.hilt.android.testing)
+    // Kai → SentinelsFortress (Security & Threat Monitoring)
+    implementation(project(":kai:sentinelsfortress:security"))
+    implementation(project(":kai:sentinelsfortress:systemintegrity"))
+    implementation(project(":kai:sentinelsfortress:threatmonitor"))
 
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.core)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.espresso.core)
-    kspAndroidTest(libs.dagger.hilt.android.compiler)
+    // Genesis → OracleDrive (System & Root Management)
+    implementation(project(":genesis:oracledrive"))
+    implementation(project(":genesis:oracledrive:rootmanagement"))
+    implementation(project(":genesis:oracledrive:datavein"))
+
+    // Cascade → DataStream (Data Routing & Delivery)
+    implementation(project(":cascade:datastream:routing"))
+    implementation(project(":cascade:datastream:delivery"))
+    implementation(project(":cascade:datastream:taskmanager"))
+
+    // Agents → GrowthMetrics (AI Agent Evolution)
+    implementation(project(":agents:growthmetrics:metareflection"))
+    implementation(project(":agents:growthmetrics:nexusmemory"))
+    implementation(project(":agents:growthmetrics:spheregrid"))
+    implementation(project(":agents:growthmetrics:identity"))
+    implementation(project(":agents:growthmetrics:progression"))
+    implementation(project(":agents:growthmetrics:tasker"))
 }
 
 // Force a single annotations artifact to avoid duplicate-class errors
 configurations.all {
+    // Skip androidTest configurations to avoid issues with local JARs
     if (name.contains("AndroidTest")) {
         return@all
     }
@@ -262,50 +247,3 @@ configurations.all {
         force("org.jetbrains:annotations:26.0.2-1")
     }
 }
-
-tasks.register<Delete>("cleanKspCache") {
-    group = "build setup"
-    description = "Clean KSP caches (fixes NullPointerException)"
-    delete(project.layout.buildDirectory.dir("generated/ksp").get().asFile)
-    delete(project.layout.buildDirectory.dir("tmp/kapt3").get().asFile)
-    delete(project.layout.buildDirectory.dir("tmp/kotlin-classes").get().asFile)
-    delete(project.layout.buildDirectory.dir("kotlin").get().asFile)
-    delete(project.layout.buildDirectory.dir("generated/source/ksp").get().asFile)
-}
-
-tasks.named("preBuild") {
-    dependsOn("cleanKspCache")
-}
-
-// Fix KSP task ordering for ALL build variants (Debug + Release)
-tasks.matching { it.name.startsWith("ksp") && it.name.contains("Kotlin") }.configureEach {
-    // Make KSP wait for BuildConfig generation in all variants
-    tasks.matching { it.name.startsWith("generate") && it.name.contains("BuildConfig") }.forEach { buildConfigTask ->
-        dependsOn(buildConfigTask)
-        mustRunAfter(buildConfigTask)
-    }
-}
-
-// AGP 9.0 with built-in Kotlin automatically handles KSP ordering
-// No need to manually configure task dependencies for compileDebugKotlin/compileReleaseKotlin
-// These tasks don't exist in AGP 9.0+ as Kotlin compilation is integrated differently
-
-tasks.register("aegenesisAppStatus") {
-    group = "reporting"
-    description = "Display Genesis application module status"
-    doLast {
-        val apiExists = file("src/main/resources/api/openapi.yaml").exists()
-        val apiSize = if (apiExists) file("src/main/resources/api/openapi.yaml").length() else 0L
-        val nativeCode = file("src/main/cpp/CMakeLists.txt").exists()
-        println("📱 AEGENESIS APP MODULE STATUS")
-        println("Unified API Spec: ${if (apiExists) "✅ Found" else "❌ Missing"}")
-        println("📄 API File Size: ${apiSize / 1024}KB")
-        println("🔧 Native Code: ${if (nativeCode) "✅ Enabled" else "❌ Disabled"}")
-        println("🧠 KSP Mode: Active")
-        println("🎯 Target SDK: 36")
-        println("📱 Min SDK: 34")
-        println("✅ Status: Ready for coinscience AI integration!")
-    }
-}
-
-apply(from = "cleanup-tasks.gradle.kts")
