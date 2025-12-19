@@ -74,10 +74,10 @@ class GenesisLibraryPlugin : Plugin<Project> {
                     }
                 }
 
-                // Java 25 bytecode (Firebase + AGP 9.0 compatible)
+                // Java 24 bytecode (Firebase + AGP 9.0 compatible)
                 compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_25
-                    targetCompatibility = JavaVersion.VERSION_25
+                    sourceCompatibility = JavaVersion.VERSION_24
+                    targetCompatibility = JavaVersion.VERSION_24
                     isCoreLibraryDesugaringEnabled = true
                 }
 
@@ -113,6 +113,19 @@ class GenesisLibraryPlugin : Plugin<Project> {
             // Auto-configured dependencies (provided by convention plugin)
             // ═══════════════════════════════════════════════════════════════════════════
             // Note: Hilt dependencies REMOVED - use genesis.android.library.hilt for Hilt support
+
+            // Compose UI stack (Total Coverage for Genesis modules)
+            dependencies.add("api", dependencies.platform("androidx.compose:compose-bom:2024.11.00"))
+            dependencies.add("api", "androidx.compose.runtime:runtime")
+            dependencies.add("api", "androidx.compose.ui:ui")
+            dependencies.add("api", "androidx.compose.ui:ui-graphics")
+            dependencies.add("api", "androidx.compose.ui:ui-tooling-preview")
+            dependencies.add("api", "androidx.compose.foundation:foundation")
+            dependencies.add("api", "androidx.compose.foundation:foundation-layout")
+            dependencies.add("api", "androidx.compose.material3:material3")
+            dependencies.add("api", "androidx.compose.material:material-icons-core")
+            dependencies.add("api", "androidx.compose.material:material-icons-extended")
+            dependencies.add("debugImplementation", "androidx.compose.ui:ui-tooling")
 
             // Core Android libraries
             dependencies.add("implementation", "androidx.core:core-ktx:1.17.0")

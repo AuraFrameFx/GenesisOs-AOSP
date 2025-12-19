@@ -140,12 +140,17 @@ class GenesisApplicationPlugin : Plugin<Project> {
             dependencies.add("implementation", "com.google.dagger:hilt-android:2.57.2")
             dependencies.add("ksp", "com.google.dagger:hilt-android-compiler:2.57.2")
 
-            // Compose BOM (Bill of Materials)
+            // Compose UI stack (Total Coverage for Genesis modules)
             dependencies.add("implementation", dependencies.platform("androidx.compose:compose-bom:2024.11.00"))
+            dependencies.add("implementation", "androidx.compose.runtime:runtime")
             dependencies.add("implementation", "androidx.compose.ui:ui")
             dependencies.add("implementation", "androidx.compose.ui:ui-graphics")
             dependencies.add("implementation", "androidx.compose.ui:ui-tooling-preview")
+            dependencies.add("implementation", "androidx.compose.foundation:foundation")
+            dependencies.add("implementation", "androidx.compose.foundation:foundation-layout")
             dependencies.add("implementation", "androidx.compose.material3:material3")
+            dependencies.add("implementation", "androidx.compose.material:material-icons-core")
+            dependencies.add("implementation", "androidx.compose.material:material-icons-extended")
             dependencies.add("debugImplementation", "androidx.compose.ui:ui-tooling")
 
             // Core Android libraries
