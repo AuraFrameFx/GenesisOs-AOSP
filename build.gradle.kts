@@ -15,8 +15,8 @@ plugins {
     kotlin("plugin.parcelize") version "2.3.0-RC2" apply false
 
     // Android plugins
-    id("com.android.application") version "9.0.0-beta05" apply false
-    id("com.android.library") version "9.0.0-beta05" apply false
+    id("com.android.application") version "9.0.0-rc01" apply false
+    id("com.android.library") version "9.0.0-rc01" apply false
 
     // Other plugins
     id("com.google.dagger.hilt.android") version "2.57.2" apply false
